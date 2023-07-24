@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    restart: always
+    volumes:
+      - mongodb_data:/data/db
+
+  chat-backend:
+    build:
+      context: ./backend
+    container_name: chat-backend
+    depends_on:
+      - mongodb
+    ports:
+      - 3001:3001
+    restart: always
+    volumes:
+      - ./backend:/app/backend
+  
+  chat-frontend:
+    build:
+      context: ./frontend
+    container_name: chat-frontend
+    depends_on:
+      - chat-backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/frontend
+
+volumes:
+  mongodb_data:
