@@ -23,6 +23,7 @@ const usersIdOnline: string[] = []
 
 io.on("connection", socket => {
   socket.on("logged", userId => { 
+    console.log(userId)
     const userExistsInServer = users.find(user => user.userId === userId)
 
     if(userExistsInServer) userExistsInServer.socket_id = socket.id
@@ -30,8 +31,7 @@ io.on("connection", socket => {
       users.push({ socket_id: socket.id, userId })
       usersIdOnline.push(userId)
     } 
-    console.log("logged")
-    console.log(usersIdOnline)
+    
     io.emit("users-online", usersIdOnline)
   })
 

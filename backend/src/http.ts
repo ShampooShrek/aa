@@ -5,7 +5,7 @@ import route from "./router"
 import http from "http"
 import { Server } from "socket.io"
 
-mongoose.connect("mongodb://mongodb/Chat")
+mongoose.connect("mongodb://127.0.0.1/Chat")
   .then(_ => console.log("Conectado ao banco de dados"))
 
 const app = express()
