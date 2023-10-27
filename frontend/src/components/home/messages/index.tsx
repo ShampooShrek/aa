@@ -6,10 +6,10 @@ import { Message } from "../../../models/User"
 
 
 const Messages = () => {
-  const { friendSelected, user } = AuthHook()
+  const { friendSelected, user,friends } = AuthHook()
 
   const pageEndRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>(friendSelected?.messages ??[])
   const [message, setMessage] = useState<string>("")
 
   const sendMessage = () => {
@@ -33,18 +33,7 @@ const Messages = () => {
 
   useEffect(() => {
     setMessages(friendSelected?.messages ?? [])
-  }, [friendSelected])
-
-  useEffect(() => {
-    socket.on("message-received", (data: Message) => {
-      console.log(data)
-      setMessages(msgs => [...msgs, data])
-    })
-
-    return () => {
-      socket.off("message-received")
-    }
-  }, [])
+  }, [friendSelected, friends])
 
   const scrollToBottom = () => {
     if (pageEndRef.current) {

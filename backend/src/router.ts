@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Message, User } from "./models/User";
 import { Server, Socket } from "socket.io";
+import { IoMildleware } from "./websocket";
 
 const route = Router()
 
@@ -37,7 +38,6 @@ route.get("/users", async (req: Request, res: Response) => {
 
 route.post("/login", async (req: Request, res: Response) => {
   const { name, password }: TypeUser = req.body
-  console.log(req.body)
 
   const userExists = await User.findOne({ name }, 'password name perfilImage')
 
@@ -70,6 +70,9 @@ route.post("/users/:userId/friends/:friendId", async (req: Request, res: Respons
   await User.findByIdAndUpdate(friendId, { $push: { friends: UserExists._id } })
 
   const UserWithFriends = await User.findById(userId).populate("friends")
+
+  const io: Server<Socket, {}> = req.body.io
+  
 
   return res.status(200).json(UserWithFriends)
 })

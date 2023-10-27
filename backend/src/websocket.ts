@@ -22,8 +22,7 @@ const users: Users[] = []
 const usersIdOnline: string[] = []
 
 io.on("connection", socket => {
-  socket.on("logged", userId => { 
-    console.log(userId)
+  socket.on("logged", (userId/* callback */) => { 
     const userExistsInServer = users.find(user => user.userId === userId)
 
     if(userExistsInServer) userExistsInServer.socket_id = socket.id
@@ -33,6 +32,7 @@ io.on("connection", socket => {
     } 
     
     io.emit("users-online", usersIdOnline)
+    // callback(usersIdOnline)
   })
 
   socket.on("join-room", async ({ id1, id2 }) => {
@@ -67,7 +67,6 @@ io.on("connection", socket => {
   })
 
   socket.on("disconnect", () => {
-    console.log("Cliente desconectado!");
     const disconnectUserIndex = users.findIndex(u => u.socket_id === socket.id);
   
     if (disconnectUserIndex !== -1) {
@@ -77,8 +76,6 @@ io.on("connection", socket => {
       const onlineUserIndex = usersIdOnline.findIndex(u => u === userId);
       if (onlineUserIndex !== -1) {
         usersIdOnline.splice(onlineUserIndex, 1);
-        console.log("deslogged")
-        console.log(usersIdOnline)
       }
     }  
     io.emit("users-online", usersIdOnline);
@@ -86,9 +83,9 @@ io.on("connection", socket => {
 
 })
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+export const IoMildleware= (req: Request, res: Response, next: NextFunction) => {
   req.body.io = io
   next();
-})
+}
 
 export default io

@@ -10,19 +10,8 @@ interface FriendsOnline extends FriendsWithMessages {
 }
 
 const Friends = () => {
-  const { selectFriend, logged, user, friends } = AuthHook()
+  const { selectFriend, logged, user, friends, usersOnline } = AuthHook()
   const [friendsOnline, setFriendsOnline] = useState<FriendsOnline[]>([])
-  const [usersOnline, setUsersOnline] = useState<string[]>([])
-
-  useEffect(() => {
-    socket.on("users-online", users => {
-      setUsersOnline(users)
-    })
-
-    return () => {
-      socket.off("users-online")
-    }
-  }, [])
 
   useEffect(() => {
     const newFriendsOnline: FriendsOnline[] = friends ? friends.map(friend => {

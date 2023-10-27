@@ -11,11 +11,8 @@ const Account = () => {
   useEffect(() => {
     window.app.send("get-store", "users")
     window.app.on("resp-store", (event, users: User[]) => {
-      console.log(users)
         if(Array.isArray(users)) {
         setAccounts(users)
-      } else {
-        console.log(users)
       }
     })
   }, [])
